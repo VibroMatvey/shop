@@ -1,26 +1,38 @@
 <script setup>
-import { ref, onBeforeMount } from 'vue';
+import { ref, onBeforeMount, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useProductsStore } from '@/stores/products'
+import { useProductsStore } from '@/stores/products';
+
 const route = useRoute()
 const router = useRouter()
 const store = useProductsStore()
 const tg = ref(window.Telegram.WebApp)
+const cart = ref(new Object())
+
 onBeforeMount(async () => {
     await store.request_products(route.query?.shop_id)
     tg.value.expand();
 })
-const cart = ref(new Object())
 
 function setCartItem(item) {
     item['inCart'] = 1
     cart.value[item.id] = item
 }
+
+watch(cart.value, (newVal, oldVal) => {
+    if (newVal != {}) {
+        tg.value.MainButton.isVisible = true
+    } else {
+        tg.value.MainButton.isVisible = false
+    }
+}, {
+    deep: true
+})
 </script>
 
 <template>
-    <p>
-        Products
+    <p class="prosucts__head">
+        г. {{ store.products[0].shop.city.title }} | магазин "{{ store.products[0].shop.title }}"
     </p>
     <div class="products__grid">
         <article class="products__item" v-for="product in store.products" :key="product.id">
@@ -47,6 +59,12 @@ button {
     background-color: var(--tg-theme-button-color);
     color: var(--tg-theme-button-text-color);
 }
+
+.prosucts__head {
+    text-align: center;
+    font-weight: 500;
+}
+
 .products__grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
