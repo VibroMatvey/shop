@@ -107,6 +107,7 @@ button {
         display: flex;
         justify-content: center;
         gap: 1rem;
+        align-items: center;
     }
 }
 </style>
