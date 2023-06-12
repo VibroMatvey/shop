@@ -84,6 +84,11 @@ button {
     color: var(--tg-theme-button-text-color);
 }
 
+button:disabled,
+button[disabled]{
+  background-color: rgb(190, 190, 190);
+}
+
 .prosucts__head {
     text-align: center;
     font-weight: 500;
