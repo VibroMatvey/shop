@@ -16,20 +16,26 @@ onBeforeMount(async () => {
     <p>
         Products
     </p>
-    <div>
-        <p v-for="product in store.products" :key="product.id">
-        {{ product.title }}
-        </p>
+    <div class="products__grid">
+        <article v-for="product in store.products" :key="product.id">
+            <h3>{{ product.title }}</h3>
+            <p>{{ product.description }}</p>
+            <p>{{ product.price }}</p>
+            <button>В корзину</button>
+        </article>
         <p v-if="store.products.length === 0">
             Продукты не найдены
         </p>
     </div>
-    <button>qweqew</button>
 </template>
 
 <style scoped>
 button {
     background-color: var(--tg-theme-button-color);
     color: var(--tg-theme-button-text-color);
+}
+.products__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
 }
 </style>
