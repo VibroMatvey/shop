@@ -8,6 +8,7 @@ const store = useProductsStore()
 const tg = ref(window.Telegram.WebApp)
 onBeforeMount(async () => {
     await store.request_products(route.query?.shop_id)
+    tg.value.expand();
 })
 const cart = ref(new Object())
 
