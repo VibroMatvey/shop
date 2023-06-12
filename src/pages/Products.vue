@@ -22,12 +22,14 @@ function setCartItem(item) {
         Products
     </p>
     <div class="products__grid">
-        <article v-for="product in store.products" :key="product.id">
-            <h3>{{ product.title }}</h3>
+        <article class="products__item" v-for="product in store.products" :key="product.id">
+            <div>
+                <h3>{{ product.title }}</h3>
+            </div>
             <p>{{ product.description }}</p>
             <p>{{ product.price }} $</p>
             <button v-if="!cart[product.id]" @click="setCartItem(product)">В корзину</button>
-            <div v-else>
+            <div v-else class="products__cart_action">
                 <button @click="cart[product.id]['inCart'] === 1 ? delete cart[product.id] : cart[product.id]['inCart'] -= 1">-</button>
                 <p>{{ cart[product.id]['inCart'] }}</p>
                 <button @click="cart[product.id]['inCart'] += 1">+</button>
@@ -39,7 +41,7 @@ function setCartItem(item) {
     </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 button {
     background-color: var(--tg-theme-button-color);
     color: var(--tg-theme-button-text-color);
@@ -47,5 +49,17 @@ button {
 .products__grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
+
+    .products__item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .products__cart_action {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+    }
 }
 </style>

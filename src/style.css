@@ -13,7 +13,6 @@
 body {
   margin: 0;
   display: flex;
-  place-items: center;
   width: 100%;
   min-height: 100vh;
 }
@@ -36,7 +35,4 @@ button {
 
 #app {
   width: 100%;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
 }
