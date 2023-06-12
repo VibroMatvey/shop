@@ -6,10 +6,15 @@ const route = useRoute()
 const router = useRouter()
 const store = useProductsStore()
 const tg = ref(window.Telegram.WebApp)
-console.log(tg.value.initData);
 onBeforeMount(async () => {
     await store.request_products(route.query?.shop_id)
 })
+const cart = ref(new Object())
+
+function setCartItem(item) {
+    item['inCart'] = 1
+    cart.value[item.id] = item
+}
 </script>
 
 <template>
@@ -20,8 +25,13 @@ onBeforeMount(async () => {
         <article v-for="product in store.products" :key="product.id">
             <h3>{{ product.title }}</h3>
             <p>{{ product.description }}</p>
-            <p>{{ product.price }}</p>
-            <button>В корзину</button>
+            <p>{{ product.price }} $</p>
+            <button v-if="!cart[product.id]" @click="setCartItem(product)">В корзину</button>
+            <div v-else>
+                <button @click="cart[product.id]['inCart'] === 1 ? delete cart[product.id] : cart[product.id]['inCart'] -= 1">-</button>
+                <p>{{ cart[product.id]['inCart'] }}</p>
+                <button @click="cart[product.id]['inCart'] += 1">+</button>
+            </div>
         </article>
         <p v-if="store.products.length === 0">
             Продукты не найдены
