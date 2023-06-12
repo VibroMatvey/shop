@@ -11,23 +11,13 @@ const cart = ref(new Object())
 
 onBeforeMount(async () => {
     await store.request_products(route.query?.shop_id)
-    tg.value.expand();
 })
 
 function setCartItem(item) {
     item['inCart'] = 1
     cart.value[item.id] = item
+    tg.value.MainButton.isVisible = true
 }
-
-watch(cart.value, (newVal, oldVal) => {
-    if (newVal != {}) {
-        tg.value.MainButton.isVisible = true
-    } else {
-        tg.value.MainButton.isVisible = false
-    }
-}, {
-    deep: true
-})
 </script>
 
 <template>
