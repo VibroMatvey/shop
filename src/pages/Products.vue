@@ -1,12 +1,10 @@
 <script setup>
 let tg = window.Telegram.WebApp;
-console.log(tg.initDataUnsafe);
-console.log(tg.ThemeParams?.bg_color);
 </script>
 
 <template>
     <p>
-        {{ tg.initData }}
+        {{ tg.ThemeParams?.bg_color }}
     </p>
     <p>
         Products
