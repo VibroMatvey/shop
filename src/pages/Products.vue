@@ -18,8 +18,24 @@ function setCartItem(item) {
     cart.value[item.id] = item
 }
 
+function minusCartItem(product, e) {
+    if (e.target.parentNode.childNodes[2].disabled = true) {
+        e.target.parentNode.childNodes[2].disabled = false
+    }
+    if (cart.value[product.id]['inCart'] === 1) {
+        return delete cart.value[product.id]
+    }
+    cart.value[product.id]['inCart'] -= 1
+}
+
+function plusCartItem(product, e) {
+    if (cart.value[product.id]['inCart'] + 1 === cart.value[product.id]['count']) {
+        e.target.disabled = true;
+    }
+    cart.value[product.id]['inCart'] += 1
+}
+
 watch(cart.value, (newVal, oldVal) => {
-    console.log(Object.keys(newVal));
     if (Object.keys(newVal).length > 0) {
         tg.MainButton.isVisible = true
         let text = []
@@ -48,12 +64,12 @@ watch(cart.value, (newVal, oldVal) => {
                 <h3>{{ product.title }}</h3>
             </div>
             <p>{{ product.description }}</p>
-            <p>{{ product.price }} $</p>
+            <span>{{ product.price }} руб.</span>
             <button v-if="!cart[product.id]" @click="setCartItem(product)">В корзину</button>
             <div v-else class="products__cart_action">
-                <button @click="cart[product.id]['inCart'] === 1 ? delete cart[product.id] : cart[product.id]['inCart'] -= 1">-</button>
+                <button @click="minusCartItem(product, $event)">-</button>
                 <p>{{ cart[product.id]['inCart'] }}</p>
-                <button @click="cart[product.id]['inCart'] += 1">+</button>
+                <button @click="plusCartItem(product, $event)">+</button>
             </div>
         </article>
         <p v-if="store.products.length === 0">
