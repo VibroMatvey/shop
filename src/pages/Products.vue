@@ -6,7 +6,7 @@ import { useProductsStore } from '@/stores/products';
 const route = useRoute()
 const router = useRouter()
 const store = useProductsStore()
-const tg = ref(window.Telegram.WebApp)
+let tg = window.Telegram.WebApp
 const cart = ref(new Object())
 
 onBeforeMount(async () => {
@@ -16,7 +16,7 @@ onBeforeMount(async () => {
 function setCartItem(item) {
     item['inCart'] = 1
     cart.value[item.id] = item
-    tg.value.MainButton.isVisible = true
+    tg.MainButton.isVisible = true
 }
 </script>
 
