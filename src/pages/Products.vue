@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useProductStore } from '@/stores/products'
+import { useProductStore } from '../store/product.js'
 const route = useRoute()
 const router = useRouter()
 const tg = ref(window.Telegram.WebApp)
