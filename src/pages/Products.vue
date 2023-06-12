@@ -64,7 +64,7 @@ watch(cart.value, (newVal, oldVal) => {
                 <h3>{{ product.title }}</h3>
             </div>
             <p>{{ product.description }}</p>
-            <span>{{ product.price }} руб.</span>
+            <span class="product__price">{{ product.price }} руб.</span>
             <button v-if="!cart[product.id]" @click="setCartItem(product)">В корзину</button>
             <div v-else class="products__cart_action">
                 <button @click="minusCartItem(product, $event)">-</button>
@@ -97,6 +97,10 @@ button {
         display: flex;
         flex-direction: column;
         align-items: center;
+
+        .product__price {
+            margin-bottom: 1rem;
+        }
     }
 
     .products__cart_action {
