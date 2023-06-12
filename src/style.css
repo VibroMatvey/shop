@@ -31,6 +31,12 @@ button {
   cursor: pointer;
   outline: none;
   border: none;
+  transition: all 0.2s ease;
+}
+
+button:disabled,
+button[disabled]{
+  background-color: rgb(190, 190, 190);
 }
 
 #app {
