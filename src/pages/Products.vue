@@ -16,8 +16,17 @@ onBeforeMount(async () => {
 function setCartItem(item) {
     item['inCart'] = 1
     cart.value[item.id] = item
-    tg.MainButton.isVisible = true
 }
+
+watch(cart.value, (newVal, oldVal) => {
+    if (Object.keys(newVal).length > 0) {
+        console.log(1);
+        tg.MainButton.isVisible = true
+    } else {
+        console.log(0);
+        tg.MainButton.isVisible = false
+    }
+})
 </script>
 
 <template>
