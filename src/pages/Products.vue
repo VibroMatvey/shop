@@ -3,7 +3,9 @@ let tg = window.Telegram.WebApp;
 </script>
 
 <template>
-    Products
+    <p>
+        Products
+    </p>
 </template>
 
 <style scoped>
