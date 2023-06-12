@@ -1,22 +1,28 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onBeforeMount } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useProductStore } from '../store/product.js'
+import { useProductsStore } from '@/stores/products'
 const route = useRoute()
 const router = useRouter()
 const tg = ref(window.Telegram.WebApp)
-const store = useProductStore()
+const store = useProductsStore()
+onBeforeMount(async () => {
+    await store.request_products(route.query?.shop_id)
+})
 </script>
 
 <template>
+    <p>
+        Products
+    </p>
     <div>
         <p v-for="product in store.products" :key="product.id">
         {{ product.title }}
         </p>
+        <p v-if="store.products.length === 0">
+            Продукты не найдены
+        </p>
     </div>
-    <p>
-        Products
-    </p>
 </template>
 
 <style scoped>
