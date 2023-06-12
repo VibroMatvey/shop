@@ -4,8 +4,9 @@ import { useRoute, useRouter } from 'vue-router';
 import { useProductsStore } from '@/stores/products'
 const route = useRoute()
 const router = useRouter()
-const tg = ref(window.Telegram.WebApp)
 const store = useProductsStore()
+const tg = ref(window.Telegram.WebApp)
+console.log(tg.value.initData);
 onBeforeMount(async () => {
     await store.request_products(route.query?.shop_id)
 })
@@ -23,7 +24,12 @@ onBeforeMount(async () => {
             Продукты не найдены
         </p>
     </div>
+    <button>qweqew</button>
 </template>
 
 <style scoped>
+button {
+    background-color: var(--tg-theme-button-color);
+    color: var(--tg-theme-button-text-color);
+}
 </style>
