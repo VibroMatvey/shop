@@ -19,13 +19,22 @@ function setCartItem(item) {
 }
 
 watch(cart.value, (newVal, oldVal) => {
+    console.log(Object.keys(newVal));
     if (Object.keys(newVal).length > 0) {
-        console.log(1);
         tg.MainButton.isVisible = true
+        let text = []
+        let total = 0
+        Object.keys(newVal).forEach(item => {
+            text += `${cart.value[item].title} ${cart.value[item].inCart} шт. `
+            total += cart.value[item].price * cart.value[item].inCart
+        })
+        text += `Итого: ${total}`
+        tg.MainButton.setText(text)
     } else {
-        console.log(0);
         tg.MainButton.isVisible = false
     }
+}, {
+    deep: true
 })
 </script>
 
