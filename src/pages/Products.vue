@@ -1,10 +1,14 @@
 <script setup>
-let tg = window.Telegram.WebApp;
+import { ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+const route = useRoute()
+const router = useRouter()
+const tg = ref(window.Telegram.WebApp)
 </script>
 
 <template>
     <p>
-        {{ tg.ThemeParams?.bg_color }}
+        {{ route.query?.shop_id }}
     </p>
     <p>
         Products
