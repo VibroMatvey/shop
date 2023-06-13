@@ -59,9 +59,9 @@ watch(cart.value, (newVal, oldVal) => {
     <div class="products__grid">
         <article class="products__item" v-for="product in store.products.items" :key="product.id">
             <div>
-                <h3>{{ product.title }}</h3>
+                <h3 class="product__title">{{ product.title }}</h3>
             </div>
-            <p>{{ product.description }}</p>
+            <p class="product__description">{{ product.description }}</p>
             <span class="product__price">{{ product.price }} руб.</span>
             <div v-if="!cart[product.id]" @click="setCartItem(product)" class="products__cart_action">
                 <button>В корзину</button>
@@ -84,6 +84,14 @@ watch(cart.value, (newVal, oldVal) => {
 </template>
 
 <style scoped lang="scss">
+body {
+    background-color: var(--tg-theme-bg-color);
+}
+
+a {
+    color: var(--tg-theme-link-color);
+}
+
 button {
     background-color: var(--tg-theme-button-color);
     color: var(--tg-theme-button-text-color);
@@ -91,7 +99,7 @@ button {
 
 button:disabled,
 button[disabled]{
-  background-color: rgb(190, 190, 190);
+  background-color: rgb(230, 230, 230);
 }
 
 .prosucts__head {
@@ -111,6 +119,14 @@ button[disabled]{
 
         .product__price {
             margin-bottom: 1rem;
+        }
+
+        .product__title {
+            color: var(--tg-theme-text-color);
+        }
+
+        .product__description {
+            color: var(--tg-theme-hint-color);
         }
     }
 
