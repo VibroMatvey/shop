@@ -99,7 +99,7 @@ button {
 
 button:disabled,
 button[disabled]{
-  background-color: rgb(230, 230, 230);
+  background-color: rgb(200, 200, 200);
 }
 
 .prosucts__head {
@@ -119,6 +119,7 @@ button[disabled]{
 
         .product__price {
             margin-bottom: 1rem;
+            color: var(--tg-theme-text-color);
         }
 
         .product__title {
