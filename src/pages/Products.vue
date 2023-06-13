@@ -30,6 +30,7 @@ function plusCartItem(product) {
 }
 
 async function changePage(page) {
+    window.scrollTo(0,0);
     await store.request_products(route.query?.shop_id, page)
 }
 
