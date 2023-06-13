@@ -84,7 +84,7 @@ watch(cart.value, (newVal, oldVal) => {
 </template>
 
 <style scoped lang="scss">
-body {
+body, #app, .products__grid {
     background-color: var(--tg-theme-bg-color);
 }
 
