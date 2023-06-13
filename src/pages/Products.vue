@@ -100,6 +100,7 @@ button {
 button:disabled,
 button[disabled]{
   background-color: rgb(200, 200, 200);
+  color: rgb(100, 100, 100);
 }
 
 .prosucts__head {
