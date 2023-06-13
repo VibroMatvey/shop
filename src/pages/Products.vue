@@ -146,7 +146,10 @@ button[disabled]{
 }
 
 .products__pagination {
-    padding: 1rem;
+    padding-top: 2rem;
+    padding-right: 1rem;
+    padding-left: 1rem;
+    padding-bottom: 2rem;
     display: flex;
     justify-content: center;
     gap: 1rem;
