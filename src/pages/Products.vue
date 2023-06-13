@@ -18,26 +18,26 @@ function setCartItem(item) {
     cart.value[item.id] = item
 }
 
-function minusCartItem(product, e) {
-    if (e.target.parentNode.childNodes[2].disabled = true) {
-        e.target.parentNode.childNodes[2].disabled = false
-    }
+function minusCartItem(product) {
     if (cart.value[product.id]['inCart'] === 1) {
         return delete cart.value[product.id]
     }
     cart.value[product.id]['inCart'] -= 1
 }
 
-function plusCartItem(product, e) {
-    if (cart.value[product.id]['inCart'] + 1 === cart.value[product.id]['count']) {
-        e.target.disabled = true;
-    }
+function plusCartItem(product) {
     cart.value[product.id]['inCart'] += 1
+}
+
+async function changePage(page) {
+    await store.request_products(route.query?.shop_id, page)
 }
 
 watch(cart.value, (newVal, oldVal) => {
     if (Object.keys(newVal).length > 0) {
-        tg.MainButton.isVisible = true
+        if (!tg.MainButton.isVisible) {
+            tg.MainButton.isVisible = true
+        }
         let text = []
         let total = 0
         Object.keys(newVal).forEach(item => {
@@ -55,26 +55,30 @@ watch(cart.value, (newVal, oldVal) => {
 </script>
 
 <template>
-    <p class="prosucts__head">
-        г. {{ store.products[0].shop.city.title }} | магазин "{{ store.products[0].shop.title }}"
-    </p>
     <div class="products__grid">
-        <article class="products__item" v-for="product in store.products" :key="product.id">
+        <article class="products__item" v-for="product in store.products.items" :key="product.id">
             <div>
                 <h3>{{ product.title }}</h3>
             </div>
             <p>{{ product.description }}</p>
             <span class="product__price">{{ product.price }} руб.</span>
-            <button v-if="!cart[product.id]" @click="setCartItem(product)">В корзину</button>
+            <div v-if="!cart[product.id]" @click="setCartItem(product)" class="products__cart_action">
+                <button>В корзину</button>
+            </div>
             <div v-else class="products__cart_action">
-                <button @click="minusCartItem(product, $event)">-</button>
-                <p>{{ cart[product.id]['inCart'] }}</p>
-                <button @click="plusCartItem(product, $event)">+</button>
+                <button @click="minusCartItem(product)">-</button>
+                {{ cart[product.id]['inCart'] }}
+                <button :disabled="product.count == cart[product.id]['inCart']" @click="plusCartItem(product)">+</button>
             </div>
         </article>
-        <p v-if="store.products.length === 0">
-            Продукты не найдены
-        </p>
+    </div>
+    <p v-if="store.products?.items?.length === 0" class="products__empty">
+        Продукты не найдены
+    </p>
+    <div class="products__pagination">
+        <button @click="changePage(store.products.page - 1)" :disabled="store.products.page === 1">←</button>
+        <button @click="changePage(page)" :disabled="store.products.page === page" v-for="page in store.products.pages" :key="page">{{ page }}</button>
+        <button @click="changePage(store.products.page + 1)" :disabled="store.products.pages === store.products.page">→</button>
     </div>
 </template>
 
@@ -90,7 +94,8 @@ button[disabled]{
 }
 
 .prosucts__head {
-    text-align: center;
+    display: flex;
+    justify-content: center;
     font-weight: 500;
 }
 
@@ -114,5 +119,17 @@ button[disabled]{
         gap: 1rem;
         align-items: center;
     }
+}
+
+.products__empty {
+    display: flex;
+    justify-content: center;
+}
+
+.products__pagination {
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
 }
 </style>

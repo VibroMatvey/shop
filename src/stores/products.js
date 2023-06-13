@@ -5,10 +5,11 @@ import { defineStore } from "pinia"
 export const useProductsStore = defineStore('product', () => {
     const products = ref([])
 
-    async function request_products(shop_id) {
+    async function request_products(shop_id, page = 1) {
         try {
             if (shop_id) {
-                products.value = await ky.get(`http://127.0.0.1:8000/products/${shop_id}?skip=0&limit=100`).json()
+                const response = await ky.get(`http://127.0.0.1:8000/products/${shop_id}?page=${page}&size=10`).json()
+                products.value = response
             }
         } catch (e) {
             console.log(e);

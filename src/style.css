@@ -31,7 +31,7 @@ button {
   cursor: pointer;
   outline: none;
   border: none;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 #app {
