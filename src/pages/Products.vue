@@ -1,10 +1,9 @@
 <script setup>
 import { ref, onBeforeMount, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { useProductsStore } from '@/stores/products';
 
 const route = useRoute()
-const router = useRouter()
 const store = useProductsStore()
 let tg = window.Telegram.WebApp
 const cart = ref(new Object())
@@ -53,6 +52,10 @@ watch(cart.value, (newVal, oldVal) => {
 }, {
     deep: true
 })
+
+tg.WebApp.onEvent('mainButtonClicked', () => {
+	tg.sendData(JSON.stringify(cart.value)); 
+});
 </script>
 
 <template>
