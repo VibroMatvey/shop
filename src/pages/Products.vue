@@ -7,6 +7,7 @@ const route = useRoute()
 const store = useProductsStore()
 let tg = window.Telegram.WebApp
 const cart = ref(new Object())
+const test = ref(null)
 
 onBeforeMount(async () => {
     await store.request_products(route.query?.shop_id)
@@ -54,11 +55,13 @@ watch(cart.value, (newVal, oldVal) => {
 })
 
 Telegram.WebApp.onEvent('mainButtonClicked', () => {
+    test.value = '123'
 	tg.sendData(JSON.stringify(cart.value)); 
 });
 </script>
 
 <template>
+    <div>{{ test }}</div>
     <div class="products__grid">
         <article class="products__item" v-for="product in store.products.items" :key="product.id">
             <div>
