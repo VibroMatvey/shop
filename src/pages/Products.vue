@@ -56,7 +56,7 @@ watch(cart.value, (newVal, oldVal) => {
 
 Telegram.WebApp.onEvent('mainButtonClicked', () => {
     test.value = '123'
-	tg.sendData(JSON.stringify(cart.value)); 
+	tg.sendData('123'); 
 });
 </script>
 
