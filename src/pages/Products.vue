@@ -53,7 +53,7 @@ watch(cart.value, (newVal, oldVal) => {
     deep: true
 })
 
-tg.WebApp.onEvent('mainButtonClicked', () => {
+Telegram.WebApp.onEvent('mainButtonClicked', () => {
 	tg.sendData(JSON.stringify(cart.value)); 
 });
 </script>
