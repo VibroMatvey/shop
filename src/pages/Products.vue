@@ -2,14 +2,21 @@
 import { ref, onBeforeMount, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useProductsStore } from '@/stores/products';
+import { useCategoryStore } from '@/stores/category';
 
 const route = useRoute()
-const store = useProductsStore()
+const productsStore = useProductsStore()
+const categoryStore = useCategoryStore()
 let tg = window.Telegram.WebApp
 const cart = ref(new Object())
+const selectedCategory = ref(null)
+const categories = ref([])
+const dialog = ref(false)
 
 onBeforeMount(async () => {
-    await store.request_products(route.query?.shop_id)
+    await productsStore.request_products(route.query?.shop_id)
+    await categoryStore.request_categories()
+    categories.value = categoryStore.categories
 })
 
 function setCartItem(item) {
@@ -30,7 +37,7 @@ function plusCartItem(product) {
 
 async function changePage(page) {
     window.scrollTo(0,0);
-    await store.request_products(route.query?.shop_id, page)
+    await productsStore.request_products(route.query?.shop_id, page)
 }
 
 watch(cart.value, (newVal, oldVal) => {
@@ -53,14 +60,75 @@ watch(cart.value, (newVal, oldVal) => {
     deep: true
 })
 
+function getParent(parentId, children = categoryStore.categories) {
+    children?.forEach(category => {
+        if (category.id == parentId) {
+            categories.value = children
+        }
+        getParent(parentId, category.children)
+    })
+}
+
+function selectCategory(category) {
+    selectedCategory.value = category
+    if (category.children.length > 0) {
+        categories.value = category.children
+    }
+}
+
+async function getProductsByCategory(category) {
+    await productsStore.request_products_by_category(route.query?.shop_id, category.id)
+    dialog.value = false
+}
+
 Telegram.WebApp.onEvent('mainButtonClicked', () => {
 	tg.sendData(JSON.stringify(cart.value)); 
 });
 </script>
 
 <template>
+    <v-dialog
+      v-model="dialog"
+      fullscreen
+      :scrim="false"
+      transition="dialog-top-transition"
+    >
+      <template v-slot:activator="{ props }">
+        <v-btn
+          color="primary"
+          dark
+          v-bind="props"
+        >
+          Категории
+        </v-btn>
+      </template>
+      <v-card>
+        <v-toolbar
+          dark
+          color="primary"
+        >
+          <v-btn
+            @click="dialog = false"
+          >
+            X
+          </v-btn>
+          <div v-if="selectedCategory">
+            {{ selectedCategory.title }}
+          </div>
+          <v-btn v-if="selectedCategory" @click="getProductsByCategory(selectedCategory)">
+            Продолжить
+          </v-btn>
+        </v-toolbar>
+        <div>
+            <button v-if="categories[0]?.parent_id" @click="getParent(categories[0]?.parent_id)">Назад</button>
+        </div>
+        <div v-for="category in categories" :key="category.id">
+            <button @click="selectCategory(category)">{{ category.title }}</button>
+        </div>
+      </v-card>
+    </v-dialog>
     <div class="products__grid">
-        <article class="products__item" v-for="product in store.products.items" :key="product.id">
+        <article class="products__item" v-for="product in productsStore.products.items" :key="product.id">
             <div>
                 <h3 class="product__title">{{ product.title }}</h3>
             </div>
@@ -76,13 +144,13 @@ Telegram.WebApp.onEvent('mainButtonClicked', () => {
             </div>
         </article>
     </div>
-    <p v-if="store.products?.items?.length === 0" class="products__empty">
+    <p v-if="productsStore.products?.items?.length === 0" class="products__empty">
         Продукты не найдены
     </p>
     <div class="products__pagination">
-        <button @click="changePage(store.products.page - 1)" :disabled="store.products.page === 1">←</button>
-        <button @click="changePage(page)" :disabled="store.products.page === page" v-for="page in Array.from({ length: store.products.pages }, (value, index) => index + 1).slice(store.products.page === 1 ? 0 : store.products.page === store.products.pages ? store.products.page - 3 : store.products.page - 2, store.products.page === 1 ? store.products.page + 2 : store.products.page + 1)" :key="page">{{ page }}</button>
-        <button @click="changePage(store.products.page + 1)" :disabled="store.products.pages === store.products.page">→</button>
+        <button @click="changePage(productsStore.products.page - 1)" :disabled="productsStore.products.page === 1">←</button>
+        <button @click="changePage(page)" :disabled="productsStore.products.page === page" v-for="page in Array.from({ length: productsStore.products.pages }, (value, index) => index + 1).slice(productsStore.products.page === 1 ? 0 : productsStore.products.page === productsStore.products.pages ? productsStore.products.page - 3 : productsStore.products.page - 2, productsStore.products.page === 1 ? productsStore.products.page + 2 : productsStore.products.page + 1)" :key="page">{{ page }}</button>
+        <button @click="changePage(productsStore.products.page + 1)" :disabled="productsStore.products.pages === productsStore.products.page">→</button>
     </div>
 </template>
 
