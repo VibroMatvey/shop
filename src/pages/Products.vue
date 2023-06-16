@@ -165,7 +165,7 @@ Telegram.WebApp.onEvent('mainButtonClicked', () => {
     <p v-if="productsStore.products?.items?.length === 0" class="products__empty">
         Продукты не найдены
     </p>
-    <div class="products__pagination">
+    <div class="products__pagination" v-if="productsStore.products.pages > 1">
         <button @click="changePage(productsStore.products.page - 1)" :disabled="productsStore.products.page === 1">←</button>
         <button @click="changePage(page)" :disabled="productsStore.products.page === page" v-for="page in Array.from({ length: productsStore.products.pages }, (value, index) => index + 1).slice(productsStore.products.page === 1 ? 0 : productsStore.products.page === productsStore.products.pages ? productsStore.products.page - 3 : productsStore.products.page - 2, productsStore.products.page === 1 ? productsStore.products.page + 2 : productsStore.products.page + 1)" :key="page">{{ page }}</button>
         <button @click="changePage(productsStore.products.page + 1)" :disabled="productsStore.products.pages === productsStore.products.page">→</button>
