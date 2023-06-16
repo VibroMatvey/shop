@@ -103,7 +103,7 @@ Telegram.WebApp.onEvent('mainButtonClicked', () => {
       <v-card>
         <v-toolbar
           dark
-          :color="tg.ThemeParams.button_color"
+          :color="tg?.ThemeParams?.button_color"
         >
           <v-btn
             @click="dialog = false"
