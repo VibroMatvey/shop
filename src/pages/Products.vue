@@ -3,6 +3,7 @@ import { ref, onBeforeMount, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useProductsStore } from '@/stores/products';
 import { useCategoryStore } from '@/stores/category';
+import { CheckCircleIcon, ListBulletIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 
 const route = useRoute()
 const productsStore = useProductsStore()
@@ -87,43 +88,35 @@ Telegram.WebApp.onEvent('mainButtonClicked', () => {
 </script>
 
 <template>
-    <v-dialog
+    <div class="products__header">
+        <v-dialog
       v-model="dialog"
       fullscreen
       :scrim="false"
       transition="dialog-top-transition"
     >
       <template v-slot:activator="{ props }">
-        <button
-          v-bind="props"
-        >
-          Категории
-        </button>
+        <ListBulletIcon v-bind="props" style="width: 25px; cursor: pointer;  color: var(--tg-theme-button-color);" />
       </template>
       <v-card>
-        <v-toolbar
-        class="category__header"
-        >
-          <v-btn
-            @click="dialog = false"
-          >
-            X
-          </v-btn>
-          <div v-if="selectedCategory">
-            {{ selectedCategory.title }}
-          </div>
-          <button v-if="selectedCategory" @click="getProductsByCategory(selectedCategory)">
-            Продолжить
-          </button>
-        </v-toolbar>
-        <div>
-            <router-link to="#" v-if="categories[0]?.parent_id" @click="getParent(categories[0]?.parent_id)">Назад</router-link>
+        <v-toolbar>
+        <div class="category__header">
+            <XMarkIcon @click="dialog = false" style="width: 25px; cursor: pointer; color: var(--tg-theme-button-text-color);" />
+            <div v-if="selectedCategory">
+                {{ selectedCategory.title }}
+            </div>
+            <CheckCircleIcon v-if="selectedCategory" @click="getProductsByCategory(selectedCategory)" style="width: 25px; cursor: pointer; color: var(--tg-theme-button-text-color);" />
         </div>
-        <div v-for="category in categories" :key="category.id">
-            <router-link to="#" @click="selectCategory(category)">{{ category.title }}</router-link>
+        </v-toolbar>
+        <div class="categories__back">
+            <router-link :to="route.fullPath" v-if="categories[0]?.parent_id" @click="getParent(categories[0]?.parent_id)">Назад</router-link>
+        </div>
+        <div class="categories__list">
+            <router-link v-for="category in categories" :key="category.id" :to="route.fullPath" @click="selectCategory(category)">{{ category.title }}</router-link>
         </div>
       </v-card>
-    </v-dialog>
+        </v-dialog>
+    </div>
     <div class="products__grid">
         <article class="products__item" v-for="product in productsStore.products.items" :key="product.id">
             <h3 class="product__title">{{ product.title }}</h3>
@@ -151,10 +144,36 @@ Telegram.WebApp.onEvent('mainButtonClicked', () => {
 
 <style lang="scss">
 
+.products__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+}
+
 .category__header {
     background-color: var(--tg-theme-button-color);
     color: var(--tg-theme-button-text-color);
+    display: flex;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+    padding: 1rem;
+    align-items: center;
 }
+
+.categories__list {
+    display: flex;
+    padding: 1rem;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.categories__back {
+    padding: 1rem 1rem 0.2rem 1rem;
+}
+
 body {
     background-color: var(--tg-theme-bg-color);
 }
