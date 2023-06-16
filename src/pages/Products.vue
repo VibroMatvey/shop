@@ -102,8 +102,7 @@ Telegram.WebApp.onEvent('mainButtonClicked', () => {
       </template>
       <v-card>
         <v-toolbar
-          dark
-          :color="tg?.ThemeParams?.button_color"
+        class="category__header"
         >
           <v-btn
             @click="dialog = false"
@@ -151,6 +150,11 @@ Telegram.WebApp.onEvent('mainButtonClicked', () => {
 </template>
 
 <style lang="scss">
+
+.category__header {
+    background-color: var(--tg-theme-button-color);
+    color: var(--tg-theme-button-text-color);
+}
 body {
     background-color: var(--tg-theme-bg-color);
 }
