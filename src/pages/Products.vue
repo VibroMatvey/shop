@@ -103,7 +103,7 @@ Telegram.WebApp.onEvent('mainButtonClicked', () => {
       <v-card>
         <v-toolbar
           dark
-          color="primary"
+          :color="tg.ThemeParams.button_color"
         >
           <v-btn
             @click="dialog = false"
@@ -118,10 +118,10 @@ Telegram.WebApp.onEvent('mainButtonClicked', () => {
           </button>
         </v-toolbar>
         <div>
-            <button v-if="categories[0]?.parent_id" @click="getParent(categories[0]?.parent_id)">Назад</button>
+            <router-link to="#" v-if="categories[0]?.parent_id" @click="getParent(categories[0]?.parent_id)">Назад</router-link>
         </div>
         <div v-for="category in categories" :key="category.id">
-            <button @click="selectCategory(category)">{{ category.title }}</button>
+            <router-link to="#" @click="selectCategory(category)">{{ category.title }}</router-link>
         </div>
       </v-card>
     </v-dialog>
