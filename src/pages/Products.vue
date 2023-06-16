@@ -95,8 +95,6 @@ Telegram.WebApp.onEvent('mainButtonClicked', () => {
     >
       <template v-slot:activator="{ props }">
         <v-btn
-          color="primary"
-          dark
           v-bind="props"
         >
           Категории
@@ -129,9 +127,7 @@ Telegram.WebApp.onEvent('mainButtonClicked', () => {
     </v-dialog>
     <div class="products__grid">
         <article class="products__item" v-for="product in productsStore.products.items" :key="product.id">
-            <div>
-                <h3 class="product__title">{{ product.title }}</h3>
-            </div>
+            <h3 class="product__title">{{ product.title }}</h3>
             <p class="product__description">{{ product.description }}</p>
             <span class="product__price">{{ product.price }} руб.</span>
             <div v-if="!cart[product.id]" @click="setCartItem(product)" class="products__cart_action">
@@ -188,6 +184,8 @@ button[disabled]{
         display: flex;
         flex-direction: column;
         align-items: center;
+        gap: 1rem;
+        justify-content: space-between;
 
         .product__price {
             margin-bottom: 1rem;
@@ -196,6 +194,7 @@ button[disabled]{
 
         .product__title {
             color: var(--tg-theme-text-color);
+            text-align: center;
         }
 
         .product__description {
