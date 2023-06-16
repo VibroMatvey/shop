@@ -19,7 +19,7 @@ export const useProductsStore = defineStore('product', () => {
     async function request_products_by_category(shop_id, category_id, page = 1) {
         try {
             if (shop_id) {
-                const response = await ky.get(`http://127.0.0.1:8000/products/${shop_id}/${category_id}/?page=${page}&size=50`).json()
+                const response = await ky.get(`http://127.0.0.1:8000/products/${shop_id}/${category_id}/?page=${page}&size=10`).json()
                 products.value = response
             }
         } catch (e) {

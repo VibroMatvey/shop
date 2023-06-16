@@ -39,7 +39,10 @@ function plusCartItem(product) {
 
 async function changePage(page) {
     window.scrollTo(0,0);
-    await productsStore.request_products(route.query?.shop_id, page)
+    if (selectedCategory.value) {
+        return await productsStore.request_products_by_category(route.query?.shop_id, selectedCategory.value.id, page)
+    }
+    return await productsStore.request_products(route.query?.shop_id, page)
 }
 
 watch(cart.value, (newVal, oldVal) => {
@@ -97,6 +100,14 @@ async function getProductsByCategory(category) {
     dialog.value = false
 }
 
+async function reset() {
+    await productsStore.request_products(route.query?.shop_id)
+    await categoryStore.request_categories()
+    categories.value = categoryStore.categories
+    list.value = []
+    selectedCategory.value = null
+}
+
 Telegram.WebApp.onEvent('mainButtonClicked', () => {
 	tg.sendData(JSON.stringify(cart.value)); 
 });
@@ -133,6 +144,7 @@ Telegram.WebApp.onEvent('mainButtonClicked', () => {
         </v-dialog>
     </div>
     <div v-if="list.length > 0" class="categories__line">
+        <router-link :to="route.fullPath" @click="reset()">Все</router-link>
         <router-link :to="route.fullPath" v-for="category in list" :key="category.id" class="categories__line_item" @click="getProductsByCategory(category)">{{ category.title }}</router-link>
     </div>
     <div class="products__grid">
