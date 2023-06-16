@@ -174,7 +174,7 @@ Telegram.WebApp.onEvent('mainButtonClicked', () => {
     display: flex;
     width: 100%;
     gap: 2rem;
-    padding: 0 1rem 0 1rem;
+    padding: 1rem;
     overflow-x: auto;
     white-space: nowrap;
 
