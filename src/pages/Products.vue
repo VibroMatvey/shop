@@ -94,11 +94,11 @@ Telegram.WebApp.onEvent('mainButtonClicked', () => {
       transition="dialog-top-transition"
     >
       <template v-slot:activator="{ props }">
-        <v-btn
+        <button
           v-bind="props"
         >
           Категории
-        </v-btn>
+        </button>
       </template>
       <v-card>
         <v-toolbar
@@ -113,9 +113,9 @@ Telegram.WebApp.onEvent('mainButtonClicked', () => {
           <div v-if="selectedCategory">
             {{ selectedCategory.title }}
           </div>
-          <v-btn v-if="selectedCategory" @click="getProductsByCategory(selectedCategory)">
+          <button v-if="selectedCategory" @click="getProductsByCategory(selectedCategory)">
             Продолжить
-          </v-btn>
+          </button>
         </v-toolbar>
         <div>
             <button v-if="categories[0]?.parent_id" @click="getParent(categories[0]?.parent_id)">Назад</button>
