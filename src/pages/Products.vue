@@ -13,6 +13,7 @@ const cart = ref(new Object())
 const selectedCategory = ref(null)
 const categories = ref([])
 const dialog = ref(false)
+const list = ref([])
 
 onBeforeMount(async () => {
     await productsStore.request_products(route.query?.shop_id)
@@ -64,9 +65,19 @@ watch(cart.value, (newVal, oldVal) => {
 function getParent(parentId, children = categoryStore.categories) {
     children?.forEach(category => {
         if (category.id == parentId) {
-            categories.value = children
+            return categories.value = children
         }
         getParent(parentId, category.children)
+    })
+}
+
+function getParents(parentId, children = categoryStore.categories) {
+    children?.forEach(category => {
+        if (category.id == parentId) {
+            list.value.unshift(category)
+            return getParents(category.parent_id)
+        }
+        getParents(parentId, category.children)
     })
 }
 
@@ -78,7 +89,11 @@ function selectCategory(category) {
 }
 
 async function getProductsByCategory(category) {
+    selectedCategory.value = category
+    list.value = []
     await productsStore.request_products_by_category(route.query?.shop_id, category.id)
+    getParents(category.parent_id)
+    list.value.push(selectedCategory.value)
     dialog.value = false
 }
 
@@ -117,6 +132,9 @@ Telegram.WebApp.onEvent('mainButtonClicked', () => {
       </v-card>
         </v-dialog>
     </div>
+    <div v-if="list.length > 0" class="categories__line">
+        <router-link :to="route.fullPath" v-for="category in list" :key="category.id" class="categories__line_item" @click="getProductsByCategory(category)">{{ category.title }}</router-link>
+    </div>
     <div class="products__grid">
         <article class="products__item" v-for="product in productsStore.products.items" :key="product.id">
             <h3 class="product__title">{{ product.title }}</h3>
@@ -150,6 +168,19 @@ Telegram.WebApp.onEvent('mainButtonClicked', () => {
     align-items: center;
     gap: 1rem;
     padding: 1rem;
+}
+
+.categories__line {
+    display: flex;
+    width: 100%;
+    gap: 2rem;
+    padding: 0 1rem 0 1rem;
+    overflow-x: auto;
+    white-space: nowrap;
+
+    &_item:nth-last-child(1) {
+        font-weight: bolder;
+    }
 }
 
 .category__header {
