@@ -303,6 +303,7 @@ button[disabled]{
 .products__grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    gap: 1rem;
 
     .products__item {
         display: flex;
