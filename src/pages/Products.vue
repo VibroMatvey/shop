@@ -179,7 +179,7 @@ Telegram.WebApp.onEvent('mainButtonClicked', () => {
                     <ArrowPathIcon @click="clearCart()" style="width: 25px; cursor: pointer; color: var(--tg-theme-button-text-color);" />
                 </div>
                 </v-toolbar>
-                <div class="products__grid">
+                <div class="products__grid" style="padding-top: 1rem;">
                     <article class="products__item" v-for="product in cart" :key="product.id">
                         <h3 class="product__title">{{ product.title }}</h3>
                         <p class="product__description">{{ product.description }}</p>
@@ -190,7 +190,7 @@ Telegram.WebApp.onEvent('mainButtonClicked', () => {
                             <button :disabled="product.count == cart[product.id]['inCart']" @click="plusCartItem(product)">+</button>
                         </div>
                     </article>
-                    <p v-if="Object.keys(cart).length === 0">Корзина пуста</p>
+                    <p v-if="Object.keys(cart).length === 0" class="products__empty">Корзина пуста</p>
                 </div>
             </v-card>
         </v-dialog>
