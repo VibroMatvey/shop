@@ -228,7 +228,7 @@ Telegram.WebApp.onEvent('mainButtonClicked', () => {
 
 <style lang="scss">
 .products__content {
-    padding-top: 50px;
+    padding-top: 60px;
 }
 
 .products__header {
