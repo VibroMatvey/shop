@@ -56,13 +56,11 @@ watch(cart.value, (newVal, oldVal) => {
         if (!tg.MainButton.isVisible) {
             tg.MainButton.isVisible = true
         }
-        let text = []
         let total = 0
         Object.keys(newVal).forEach(item => {
-            text += `${cart.value[item].title} ${cart.value[item].inCart} шт. `
             total += cart.value[item].price * cart.value[item].inCart
         })
-        text += `Итого: ${total}`
+        const text = `Оформить заказ. Итого: ${total}`
         tg.MainButton.setText(text)
     } else {
         tg.MainButton.isVisible = false
@@ -116,6 +114,7 @@ async function reset() {
 
 function clearCart() {
     cart.value = new Object()
+    tg.MainButton.isVisible = false
 }
 
 Telegram.WebApp.onEvent('mainButtonClicked', () => {
