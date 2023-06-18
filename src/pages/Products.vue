@@ -113,8 +113,10 @@ async function reset() {
 }
 
 function clearCart() {
-    cart.value = new Object()
-    tg.MainButton.isVisible = false
+    Object.keys(cart.value).forEach(item => {
+        cart.value[item].inCart = 1
+        minusCartItem(cart.value[item])
+    })
 }
 
 Telegram.WebApp.onEvent('mainButtonClicked', () => {
