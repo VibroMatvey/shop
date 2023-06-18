@@ -229,10 +229,10 @@ Telegram.WebApp.onEvent('mainButtonClicked', () => {
 <style lang="scss">
 .products__content {
     padding-top: 50px;
-    background-color: var(--tg-theme-bg-color);
 }
 
 .products__header {
+    background-color: var(--tg-theme-bg-color);
     display: flex;
     justify-content: space-between;
     align-items: center;
