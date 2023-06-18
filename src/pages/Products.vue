@@ -190,8 +190,8 @@ Telegram.WebApp.onEvent('mainButtonClicked', () => {
                             <button :disabled="product.count == cart[product.id]['inCart']" @click="plusCartItem(product)">+</button>
                         </div>
                     </article>
-                    <p v-if="Object.keys(cart).length === 0" class="products__empty">Корзина пуста</p>
                 </div>
+                <p v-if="Object.keys(cart).length === 0" class="products__empty">Корзина пуста</p>
             </v-card>
         </v-dialog>
     </div>
