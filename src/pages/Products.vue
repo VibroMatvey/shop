@@ -3,20 +3,26 @@ import { ref, onBeforeMount, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useProductsStore } from '@/stores/products';
 import { useCategoryStore } from '@/stores/category';
-import { CheckCircleIcon, ListBulletIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+import { useShopsStore } from '@/stores/shop';
+import { CheckCircleIcon, ListBulletIcon, XMarkIcon, ShoppingCartIcon, ArrowPathIcon } from '@heroicons/vue/24/outline'
 
 const route = useRoute()
 const productsStore = useProductsStore()
 const categoryStore = useCategoryStore()
+const shopStore = useShopsStore()
 let tg = window.Telegram.WebApp
 const cart = ref(new Object())
 const selectedCategory = ref(null)
 const categories = ref([])
-const dialog = ref(false)
+const categoryDialog = ref(false)
+const cartDialog = ref(false)
 const list = ref([])
 
 onBeforeMount(async () => {
-    await productsStore.request_products(route.query?.shop_id)
+    if (route.query?.shop_id) {
+        await shopStore.request_shop(route?.query.shop_id)
+        await productsStore.request_products(route.query?.shop_id)
+    }
     await categoryStore.request_categories()
     categories.value = categoryStore.categories
 })
@@ -97,7 +103,7 @@ async function getProductsByCategory(category) {
     await productsStore.request_products_by_category(route.query?.shop_id, category.id)
     getParents(category.parent_id)
     list.value.push(selectedCategory.value)
-    dialog.value = false
+    categoryDialog.value = false
 }
 
 async function reset() {
@@ -108,6 +114,10 @@ async function reset() {
     selectedCategory.value = null
 }
 
+function clearCart() {
+    cart.value = new Object()
+}
+
 Telegram.WebApp.onEvent('mainButtonClicked', () => {
 	tg.sendData(JSON.stringify(cart.value)); 
 });
@@ -116,31 +126,74 @@ Telegram.WebApp.onEvent('mainButtonClicked', () => {
 <template>
     <div class="products__header">
         <v-dialog
-      v-model="dialog"
-      fullscreen
-      :scrim="false"
-      transition="dialog-top-transition"
-    >
-      <template v-slot:activator="{ props }">
-        <ListBulletIcon v-bind="props" style="width: 25px; cursor: pointer;  color: var(--tg-theme-button-color);" />
-      </template>
-      <v-card>
-        <v-toolbar>
-        <div class="category__header">
-            <XMarkIcon @click="dialog = false" style="width: 25px; cursor: pointer; color: var(--tg-theme-button-text-color);" />
-            <div v-if="selectedCategory">
-                {{ selectedCategory.title }}
-            </div>
-            <CheckCircleIcon v-if="selectedCategory" @click="getProductsByCategory(selectedCategory)" style="width: 25px; cursor: pointer; color: var(--tg-theme-button-text-color);" />
+            v-model="categoryDialog"
+            fullscreen
+            :scrim="false"
+            transition="dialog-top-transition"
+            >
+            <template v-slot:activator="{ props }">
+                <ListBulletIcon v-bind="props" style="width: 25px; cursor: pointer;  color: var(--tg-theme-button-color);" />
+            </template>
+            <v-card>
+                <v-toolbar>
+                <div class="category__header">
+                    <XMarkIcon @click="categoryDialog = false" style="width: 25px; cursor: pointer; color: var(--tg-theme-button-text-color);" />
+                    <div v-if="selectedCategory">
+                        {{ selectedCategory.title }}
+                    </div>
+                    <div v-else>
+                        Категории
+                    </div>
+                    <CheckCircleIcon v-if="selectedCategory" @click="getProductsByCategory(selectedCategory)" style="width: 25px; cursor: pointer; color: var(--tg-theme-button-text-color);" />
+                    <div v-else></div>
+                </div>
+                </v-toolbar>
+                <div class="categories__back">
+                    <router-link :to="route.fullPath" v-if="categories[0]?.parent_id" @click="getParent(categories[0]?.parent_id)">Назад</router-link>
+                </div>
+                <div class="categories__list">
+                    <router-link v-for="category in categories" :key="category.id" :to="route.fullPath" @click="selectCategory(category)">{{ category.title }}</router-link>
+                </div>
+            </v-card>
+        </v-dialog>
+        <div class="products__header_select" v-if="shopStore.shop">
+            <p>{{ shopStore.shop?.city?.title }}</p>
+            <p>|</p>
+            <p>{{ shopStore.shop?.title }}</p>
         </div>
-        </v-toolbar>
-        <div class="categories__back">
-            <router-link :to="route.fullPath" v-if="categories[0]?.parent_id" @click="getParent(categories[0]?.parent_id)">Назад</router-link>
-        </div>
-        <div class="categories__list">
-            <router-link v-for="category in categories" :key="category.id" :to="route.fullPath" @click="selectCategory(category)">{{ category.title }}</router-link>
-        </div>
-      </v-card>
+        <v-dialog
+            v-model="cartDialog"
+            fullscreen
+            :scrim="false"
+            transition="dialog-top-transition"
+            >
+            <template v-slot:activator="{ props }">
+                <ShoppingCartIcon  v-bind="props" style="width: 25px; cursor: pointer;  color: var(--tg-theme-button-color);"/>
+            </template>
+            <v-card>
+                <v-toolbar>
+                <div class="category__header">
+                    <XMarkIcon @click="cartDialog = false" style="width: 25px; cursor: pointer; color: var(--tg-theme-button-text-color);" />
+                    <p>
+                       Корзина
+                    </p>
+                    <ArrowPathIcon @click="clearCart()" style="width: 25px; cursor: pointer; color: var(--tg-theme-button-text-color);" />
+                </div>
+                </v-toolbar>
+                <div class="products__grid">
+                    <article class="products__item" v-for="product in cart" :key="product.id">
+                        <h3 class="product__title">{{ product.title }}</h3>
+                        <p class="product__description">{{ product.description }}</p>
+                        <span class="product__price">{{ product.price }} руб.</span>
+                        <div class="products__cart_action">
+                            <button @click="minusCartItem(product)">-</button>
+                            {{ cart[product.id]['inCart'] }}
+                            <button :disabled="product.count == cart[product.id]['inCart']" @click="plusCartItem(product)">+</button>
+                        </div>
+                    </article>
+                    <p v-if="Object.keys(cart).length === 0">Корзина пуста</p>
+                </div>
+            </v-card>
         </v-dialog>
     </div>
     <div v-if="list.length > 0" class="categories__line">
@@ -180,6 +233,11 @@ Telegram.WebApp.onEvent('mainButtonClicked', () => {
     align-items: center;
     gap: 1rem;
     padding: 1rem;
+
+    &_select {
+        display: flex;
+        gap: 1rem;
+    }
 }
 
 .categories__line {
