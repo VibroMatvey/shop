@@ -355,6 +355,7 @@ button[disabled]{
 }
 
 .products__empty {
+    color: var(--tg-theme-text-color);
     display: flex;
     justify-content: center;
 }
