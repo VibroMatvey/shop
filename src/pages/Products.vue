@@ -173,9 +173,9 @@ Telegram.WebApp.onEvent('mainButtonClicked', () => {
                 <v-toolbar>
                 <div class="category__header">
                     <XMarkIcon @click="cartDialog = false" style="width: 25px; cursor: pointer; color: var(--tg-theme-button-text-color);" />
-                    <p>
+                    <div>
                        Корзина
-                    </p>
+                    </div>
                     <ArrowPathIcon @click="clearCart()" style="width: 25px; cursor: pointer; color: var(--tg-theme-button-text-color);" />
                 </div>
                 </v-toolbar>
