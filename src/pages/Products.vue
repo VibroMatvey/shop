@@ -133,7 +133,7 @@ Telegram.WebApp.onEvent('mainButtonClicked', () => {
             <template v-slot:activator="{ props }">
                 <ListBulletIcon v-bind="props" style="width: 25px; cursor: pointer;  color: var(--tg-theme-button-color);" />
             </template>
-            <v-card>
+            <v-card class="category__body">
                 <v-toolbar>
                 <div class="category__header">
                     <XMarkIcon @click="categoryDialog = false" style="width: 25px; cursor: pointer; color: var(--tg-theme-button-text-color);" />
@@ -169,7 +169,7 @@ Telegram.WebApp.onEvent('mainButtonClicked', () => {
             <template v-slot:activator="{ props }">
                 <ShoppingCartIcon  v-bind="props" style="width: 25px; cursor: pointer;  color: var(--tg-theme-button-color);"/>
             </template>
-            <v-card>
+            <v-card class="cart__body">
                 <v-toolbar>
                 <div class="category__header">
                     <XMarkIcon @click="cartDialog = false" style="width: 25px; cursor: pointer; color: var(--tg-theme-button-text-color);" />
@@ -227,6 +227,12 @@ Telegram.WebApp.onEvent('mainButtonClicked', () => {
 </template>
 
 <style lang="scss">
+.products__header_select {
+    color: var(--tg-theme-text-color);
+}
+.category__body, .cart__body {
+    background-color: var(--tg-theme-bg-color);
+}
 .products__content {
     padding-top: 60px;
 }
