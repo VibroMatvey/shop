@@ -210,7 +210,7 @@ Telegram.WebApp.onEvent('mainButtonClicked', () => {
                 </div>
                 <div v-else class="products__cart_action">
                     <button @click="minusCartItem(product)">-</button>
-                    {{ cart[product.id]['inCart'] }}
+                    <p>{{ cart[product.id]['inCart'] }}</p>
                     <button :disabled="product.count == cart[product.id]['inCart']" @click="plusCartItem(product)">+</button>
                 </div>
             </article>
