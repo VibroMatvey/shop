@@ -227,6 +227,9 @@ Telegram.WebApp.onEvent('mainButtonClicked', () => {
 </template>
 
 <style lang="scss">
+p {
+    color: var(--tg-theme-text-color);
+}
 .products__header_select {
     color: var(--tg-theme-text-color);
 }
