@@ -195,42 +195,53 @@ Telegram.WebApp.onEvent('mainButtonClicked', () => {
             </v-card>
         </v-dialog>
     </div>
-    <div v-if="list.length > 0" class="categories__line">
-        <router-link :to="route.fullPath" @click="reset()">Все</router-link>
-        <router-link :to="route.fullPath" v-for="category in list" :key="category.id" class="categories__line_item" @click="getProductsByCategory(category)">{{ category.title }}</router-link>
-    </div>
-    <div class="products__grid">
-        <article class="products__item" v-for="product in productsStore.products.items" :key="product.id">
-            <h3 class="product__title">{{ product.title }}</h3>
-            <p class="product__description">{{ product.description }}</p>
-            <span class="product__price">{{ product.price }} руб.</span>
-            <div v-if="!cart[product.id]" @click="setCartItem(product)" class="products__cart_action">
-                <button>В корзину</button>
-            </div>
-            <div v-else class="products__cart_action">
-                <button @click="minusCartItem(product)">-</button>
-                {{ cart[product.id]['inCart'] }}
-                <button :disabled="product.count == cart[product.id]['inCart']" @click="plusCartItem(product)">+</button>
-            </div>
-        </article>
-    </div>
-    <p v-if="productsStore.products?.items?.length === 0" class="products__empty">
-        Продукты не найдены
-    </p>
-    <div class="products__pagination" v-if="productsStore.products.pages > 1">
-        <button @click="changePage(productsStore.products.page - 1)" :disabled="productsStore.products.page === 1">←</button>
-        <button @click="changePage(page)" :disabled="productsStore.products.page === page" v-for="page in Array.from({ length: productsStore.products.pages }, (value, index) => index + 1).slice(productsStore.products.page === 1 ? 0 : productsStore.products.page === productsStore.products.pages ? productsStore.products.page - 3 : productsStore.products.page - 2, productsStore.products.page === 1 ? productsStore.products.page + 2 : productsStore.products.page + 1)" :key="page">{{ page }}</button>
-        <button @click="changePage(productsStore.products.page + 1)" :disabled="productsStore.products.pages === productsStore.products.page">→</button>
-    </div>
+    <section class="products__content">
+        <div v-if="list.length > 0" class="categories__line">
+            <router-link :to="route.fullPath" @click="reset()">Все</router-link>
+            <router-link :to="route.fullPath" v-for="category in list" :key="category.id" class="categories__line_item" @click="getProductsByCategory(category)">{{ category.title }}</router-link>
+        </div>
+        <div class="products__grid">
+            <article class="products__item" v-for="product in productsStore.products.items" :key="product.id">
+                <h3 class="product__title">{{ product.title }}</h3>
+                <p class="product__description">{{ product.description }}</p>
+                <span class="product__price">{{ product.price }} руб.</span>
+                <div v-if="!cart[product.id]" @click="setCartItem(product)" class="products__cart_action">
+                    <button>В корзину</button>
+                </div>
+                <div v-else class="products__cart_action">
+                    <button @click="minusCartItem(product)">-</button>
+                    {{ cart[product.id]['inCart'] }}
+                    <button :disabled="product.count == cart[product.id]['inCart']" @click="plusCartItem(product)">+</button>
+                </div>
+            </article>
+        </div>
+        <p v-if="productsStore.products?.items?.length === 0" class="products__empty">
+            Продукты не найдены
+        </p>
+        <div class="products__pagination" v-if="productsStore.products.pages > 1">
+            <button @click="changePage(productsStore.products.page - 1)" :disabled="productsStore.products.page === 1">←</button>
+            <button @click="changePage(page)" :disabled="productsStore.products.page === page" v-for="page in Array.from({ length: productsStore.products.pages }, (value, index) => index + 1).slice(productsStore.products.page === 1 ? 0 : productsStore.products.page === productsStore.products.pages ? productsStore.products.page - 3 : productsStore.products.page - 2, productsStore.products.page === 1 ? productsStore.products.page + 2 : productsStore.products.page + 1)" :key="page">{{ page }}</button>
+            <button @click="changePage(productsStore.products.page + 1)" :disabled="productsStore.products.pages === productsStore.products.page">→</button>
+        </div>
+    </section>
 </template>
 
 <style lang="scss">
+.products__content {
+    padding-top: 50px;
+    background-color: var(--tg-theme-bg-color);
+}
 
 .products__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 1rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999px;
     padding: 1rem;
 
     &_select {
