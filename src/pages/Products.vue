@@ -125,7 +125,7 @@ Telegram.WebApp.onEvent('mainButtonClicked', () => {
 </script>
 
 <template>
-    <div class="products__header">
+    <section class="products__header">
         <v-dialog
             v-model="categoryDialog"
             fullscreen
@@ -196,7 +196,7 @@ Telegram.WebApp.onEvent('mainButtonClicked', () => {
                 <p v-if="Object.keys(cart).length === 0" class="products__empty">Корзина пуста</p>
             </v-card>
         </v-dialog>
-    </div>
+    </section>
     <section class="products__content">
         <div v-if="list.length > 0" class="categories__line">
             <router-link :to="route.fullPath" @click="reset()">Все</router-link>
@@ -205,6 +205,7 @@ Telegram.WebApp.onEvent('mainButtonClicked', () => {
         <div class="products__grid">
             <article class="products__item" v-for="product in productsStore.products.items" :key="product.id">
                 <h3 class="product__title">{{ product.title }}</h3>
+                <img :src="'http://127.0.0.1:8000/' + product.img" :alt="product.title" :title="product.title">
                 <p class="product__description">{{ product.description }}</p>
                 <span class="product__price">{{ product.price }} руб.</span>
                 <div v-if="!cart[product.id]" @click="setCartItem(product)" class="products__cart_action">
